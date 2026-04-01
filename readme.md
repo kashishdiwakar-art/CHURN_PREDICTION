@@ -1,3 +1,4 @@
+
 <div align="center">
 
 <!-- BANNER -->
@@ -485,6 +486,69 @@ CHURN_PREDICTION/
 
 <br/>
 
+### Why This Exact Stack?
+
+```
+Scikit-Learn ColumnTransformer
+  → Numerical and categorical pipelines completely separate
+  → preprocessor.fit() on train only — zero data leakage by architecture
+
+XGBoost + LightGBM as base models
+  → Both handle missing values natively (important since we have 3% missingness)
+  → Complementary — XGB is depth-wise, LGBM is leaf-wise → different error patterns
+
+Optuna over Grid Search / Random Search
+  → TPE (Tree-structured Parzen Estimator) builds a surrogate model of performance
+  → Each trial informs the next — 30 trials finds what Grid Search needs 200+ for
+  → Trial pruning — bad trials stopped early, compute not wasted
+
+SMOTE over class_weight="balanced" alone
+  → Creates new training examples the model learns from directly
+  → class_weight only adjusts the loss — no new information added
+  → Recall improvement: +44.8 percentage points vs naive baseline
+
+StackingClassifier with passthrough=True
+  → passthrough=True → meta-learner sees original features + base model predictions
+  → OOF (out-of-fold) predictions → no data leakage between levels 0 and 1
+  → Combines RF's stability with XGBoost's accuracy with LGBM's speed
+
+SHAP TreeExplainer
+  → Exact Shapley values (not approximate LIME-style)
+  → O(TLD) complexity — fast on tree ensembles even for 500 sample explanations
+  → Both global summary (what drives churn overall) and local (why THIS customer)
+
+ui_styling.py separated from app.py
+  → Single responsibility principle — UI code never touches ML code
+  → Designer can restyle without touching the model
+  → CSS injection via inject_css() keeps Streamlit markup clean
+```
+
+---
+
+<br/>
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.9 or higher
+- 4 GB RAM minimum (8 GB recommended for SMOTE + Stacking)
+- pip package manager
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/customer-churn-prediction.git
+cd customer-churn-prediction
+
+# Install all dependencies
+pip install -r requirements.txt
+
+# Verify installation
+python -c "import sklearn, xgboost, lightgbm, shap, streamlit, optuna; print('All OK ✅')"
+```
+
 ### Train the Model
 
 ```bash
@@ -600,6 +664,25 @@ The current system is production-ready. The roadmap below shows the natural evol
 | 14 | **Drift detection (Evidently AI)** — Monitor feature and prediction distributions | Models silently degrade when data distributions shift; drift detection triggers automated retraining alerts |
 | 15 | **Docker + CI/CD pipeline** — Containerise with automated testing and deployment | Environment-independent deployment; eliminates "works on my machine" issues for team collaboration |
 | 16 | **Multi-tenant SaaS version** — Separate model instance per client | Each business has unique churn patterns; one global model is always inferior to client-specific models |
+
+<br/>
+
+### Architecture Evolution
+
+```
+Current State (v1)              Future State (v2+)
+──────────────────              ──────────────────
+Streamlit dashboard        →    FastAPI REST endpoint
+Manual CSV upload          →    Real-time event stream (Kafka / Pub-Sub)
+Pickle on local disk       →    MLflow Model Registry
+No monitoring              →    Evidently AI drift detection + alerts
+Single global model        →    Per-segment models (SMB / Enterprise / Consumer)
+Binary prediction          →    Survival curve — time-to-churn probability
+Manual retraining          →    Automated pipeline (Airflow / Prefect)
+Local deployment           →    Docker + Kubernetes + CI/CD
+```
+
+---
 
 <br/>
 
