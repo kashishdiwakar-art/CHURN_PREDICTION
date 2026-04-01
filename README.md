@@ -580,9 +580,7 @@ The current system is production-ready. The roadmap below shows the natural evol
 
 
 
-
-https://github.com/user-attachments/assets/693fab50-62bb-4a0b-bebd-7b09738283b0
-
+https://github.com/user-attachments/assets/f691707e-fd02-4912-9a5c-c13f7adaeeb4
 
 
 
