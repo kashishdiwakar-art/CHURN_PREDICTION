@@ -579,6 +579,12 @@ The current system is production-ready. The roadmap below shows the natural evol
 <img width="1533" height="835" alt="Screenshot 2026-03-31 102922" src="https://github.com/user-attachments/assets/e15ac653-898b-4cf5-957d-61520e3527b0" />
 ![demo](https://github.com/user-attachments/assets/65dc699b-b468-4dfb-bb88-088f732e8ea0)
 
+https://github.com/user-attachments/assets/324c1c67-afc0-415c-8f50-eaf6a5930bb3
+
+
+
+
+
 
 ## 📄 License
 
